@@ -1,0 +1,106 @@
+<?php TPL::output('admin/global/header.tpl.htm'); ?>
+
+<!--left-->
+<?php TPL::output('admin/global/left.tpl.htm'); ?>
+<!--left-->
+
+<!-- main -->
+<div id="main-content">
+	<div class="clear"></div>
+	<div class="content-box">
+		<div class="content-box-header">
+			<h3><?php echo $this->crumb['last']['name']; ?></h3>
+			<ul class="content-box-tabs">
+				<li><a class="default-tab current" href="#tab1">备份</a></li>
+				<li><a href="#tab2" class="">还原</a></li>
+			</ul>
+			<div class="clear"></div>
+		</div>
+		<div class="content-box-content" style="margin-left:10px;">
+			<div class="tab-content default-tab" id="tab1">
+				<form id="_action_form" action="admin/tool/database_backup_process/" method="post">
+					<fieldset>
+					<ul>
+					<li style="line-height:22px;">数据备份功能将导出 Anwsion 数据库内容，导出的数据文件可用 phpMyAdmin 导入。</li>
+					<li style="line-height:22px;">导出的数据文件可以直接下载，或登录 FTP 到 system/<?php echo $this->backup_dir;?>/ 文件夹下载。</li>
+					</ul>
+					<label>分卷备份 - 单卷长度(单位：KB) ：
+					<input type="text" class="text-input small-int" name="size" value="1024">
+					</label>
+					<label>备份文件名 ：
+					<input type="text" class="text-input small-int" name="filename" value="<?php echo date("Ymd_") . random(8);?>">
+					.sql</label>
+					</label>
+					<p>
+						<input class="button" type="submit" value="开始备份" />
+					</p>
+					</fieldset>
+				</form>
+				<div class="clear"></div>
+			</div>
+			<div class="tab-content" id="tab2" style="display:none;">
+				<form id="_action_form" action="admin/maintain/database_backup/" method="post">
+					<fieldset>
+					<ul>
+					<li style="line-height:22px; color:#ff0000;">还原数据库将会使网站数据恢复到备份数据状态，请谨慎操作。</li>
+					<li style="line-height:22px; color:#ff0000;">还原过程中网站会出现错误，请勿中断还原操作。</li>
+					<li style="line-height:22px;">若还原过程中出错，请登录 FTP 到 system/<?php echo $this->backup_dir;?>/ 文件夹下载相应数据文件，再通过 phpMyAdmin 导入。</li>
+					</ul>
+					<?php if($this->list){ ?>
+					<table>
+						<thead>
+							<tr>
+								<!--th style="width:20px;"></th-->
+								<th style="width:380px;">文件名</th>
+								<th>时间</th>
+								<th>卷数</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<td colspan="7">
+									<!--input type="checkbox" class="check-all">
+									删?
+									&nbsp;&nbsp;&nbsp;&nbsp;
+									<input type="button" value="  提交  " onclick="ajax_post($('#mem_groups'), _form_process);" class="button"-->
+								</td>
+							</tr>
+						</tfoot>
+						<tbody>
+							<?php foreach($this->list as $key => $val){ ?>
+							<tr class="alt-row">
+								<!--td><input type="checkbox" value="313" name="question_ids[]"></td-->
+								<td><?php echo $key; ?></td>
+								<td><?php echo date("Y-m-d H:i:s", $val['time']);?></td>
+								<td><?php echo $val['page'];?></td>
+								<td><a target=_blank href="admin/db_import/filename-<?php echo rawurlencode($this->backup_dir . '/' . $key); ?>">还原</a> </td>
+							</tr>
+							<?php } ?>
+						</tbody>
+					</table>
+					<?php }else{ ?>
+						暂无备份记录
+					<?php } ?>
+					</fieldset>
+				</form>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="clear"></div>
+		<div id="notf_tip" style="display:none;" class="notification png_bg"> <a href="javascript:;" class="close"><img src="<?php echo G_STATIC_URL;?>/admin/images/icons/cross_grey_small.png" alt="关闭" /></a>
+			<div id="notf_cont"></div>
+		</div>
+	</div>
+
+<!-- footer -->
+<?php TPL::output('admin/global/footer.tpl.htm'); ?>
+<!-- footer -->
+
+</div>
+<!-- main -->
+
+</div>
+
+</body>
+</html>

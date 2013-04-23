@@ -1,0 +1,118 @@
+<?php TPL::output('global/header.tpl.htm'); ?>
+
+<div class="i_bd mainElem i_clear i_allbg">
+	<div class="i_left L_sidebar">
+		<div class="t_topic_index i_prl q_congMain b_x4">
+			<h3 class="i_bdted i_prl">
+                   <div class="q_rightBar i_pas">
+						<?php if ($this->user_id) { ?><a class="i_green_bt2<?php if ($this->topic_info['has_focus']) { ?> cur<?php } ?>" href="javascript:" onclick="focus_topic($(this), $(this), <?php echo $this->topic_info['topic_id']; ?>);"><?php if ($this->topic_info['has_focus']) { ?>取消<?php } ?>关注</a><?php } ?><?php if ($this->user_info['permission']['is_administortar'] OR $this->user_info['permission']['is_moderator'] OR ($this->topic_info['topic_lock'] == 0 && $this->user_info['permission']['edit_topic'])) { ?><a onclick="$(this).siblings('.q_tipis').toggle();" class="q_setBtn" href="javascript:;"></a>
+					<div class="i_data_list i_pas q_tipis" style="display: none;">
+						<em class="i_arrows"></em>
+						<p class="i_list_p"><a href="topic/edit/<?php echo $this->topic_info['topic_id']; ?>">编辑话题</a></p>
+						<p class="i_list_p"><a href="topic/manage/<?php echo $this->topic_info['topic_id']; ?>">管理话题</a></p>
+					</div><?php } ?>
+					</div><b><?php echo $this->topic_info['topic_title']; ?></b> <?php if ($this->topic_info['topic_lock']) { ?><em class="i_lock i_small" title="此话题已锁定">锁定</em><?php } ?></h3>
+			<p class="i_txtBreak i_cl_01 tags_Mark"><?php echo $this->topic_info['topic_description']; ?></p>
+			<a class="u_topicHead i_pas"><img src="<?php echo get_topic_pic_url('max', $this->topic_info['topic_pic']); ?>" class="i_radiu5" alt="<?php echo $this->topic_info['topic_title']; ?>" title="<?php echo $this->topic_info['topic_title']; ?>"/></a>
+		</div>
+		<div class="b_restrain">
+		<h3 class="latest_trendst_h3 q_qusAll i_prl q_content_h3 ">
+			<p class="q_navC i_pas" id="v_Elem">
+				<a href="javascript:;" id="i_favorite" style="display:none">我的收藏</a>
+				<a href="javascript:;">最佳讨论</a>
+				<a href="javascript:;">等待回复</a>
+				<a href="javascript:;" class="cur">全部</a>
+			</p>
+		</h3>
+		
+		<div class="flx">
+			<div id="v_Elem_0" class="i_hide">
+				<!--内容填充 循环-->
+				<div class="i_prl" id="c_favorite_list"></div>
+				<!--内容填充 循环-->
+				
+				<p id="bp_favorite_more"><a class="i_ajax_more" href="javascript:;" title="查看更多 »">更多...</a></p>
+			</div>
+			
+			<div id="v_Elem_1" class="i_hide">
+				<!--内容填充 循环-->
+				<div class="i_prl" id="c_best_question_list"></div>
+				<!--内容填充 循环-->
+				
+				<p id="bp_best_question_more"><a class="i_ajax_more" href="javascript:;" title="查看更多 »">更多...</a></p>
+			</div>
+			
+			<div id="v_Elem_2" class="i_hide">
+				<!--内容填充 循环-->
+				<div class="i_prl" id="c_noanswer_list"></div>
+				<!--内容填充 循环-->
+				
+				<p id="bp_noanswer_more"><a class="i_ajax_more" href="javascript:;" title="查看更多 »">更多...</a></p>
+			</div>
+			
+			<div id="v_Elem_3">
+				<!--内容填充 循环-->
+				<div class="i_prl" id="c_all_list"></div>
+				<!--内容填充 循环-->
+				
+				<p id="bp_all_more"><a class="i_ajax_more" href="javascript:;" title="查看更多 »">更多...</a></p>
+			</div>
+		</div>
+        </div>
+	</div>
+
+	<div class="R_sidebar"> 
+		<div class="i_rightMain">
+			<?php TPL::output('topic/related_topics.tpl.htm'); ?>
+			
+			<?php if (is_array($this->best_answer_users)) { ?>
+			<div class="interest_user">
+				<h3>最佳回复者</h3>
+				
+				<?php foreach ($this->best_answer_users AS $key => $val) { ?>
+				<p class="add_ls">
+					<a class="add_user_f" href="people/<?php echo $val['user_info']['url_token']; ?>"><img class="user_msg" data-message="&uid=<?php echo $val['user_info']['uid']; ?>&card=user" title="<?php echo $val['user_info']['user_name']; ?>" alt="<?php echo $val['user_info']['user_name']; ?>" src="<?php echo get_avatar_url($val['user_info']['uid'], 'mid'); ?>" /></a>
+					<a class="user_msg" data-message="&uid=<?php echo $val['user_info']['uid']; ?>&card=user" href="people/<?php echo $val['user_info']['url_token']; ?>"><?php echo $val['user_info']['user_name']; ?></a> <?php if ($this->user_id != $val['uid'] AND $this->user_id) { ?><span class="i_add_attention<?php if ($val['user_info']['focus']) { ?> cur<?php } ?>" onclick="follow_people($(this), $(this).find('em'), <?php echo $val['user_info']['uid']; ?>);"><em><?php if ($val['user_info']['focus']) { ?>取消<?php } ?>关注</em></span><?php } ?>
+					<span class="add_gray">获得 <b><?php echo $val['agree_count'];?></b> 个赞同, <b><?php echo $val['thanks_count'];?></b> 次感谢
+					</span>
+				</p>
+				<?php } ?>
+			</div>
+			<?php } ?>
+
+			<div class="interest_user">
+				<h3><a><?php echo $this->topic_info['focus_count']; ?></a> 人关注该话题</h3>
+				
+				<p class="q_UserList t_stpd" id="focus_users"></p>
+			</div>
+            <div class="interest_user"><h3 style="cursor:pointer;" class="am_notes" onclick="$.topic.hideTopic(this,$('#topic_listam'));"><em class="x2 i_small">x</em>话题修改记录</h3>
+            	<p class="t_record" id="topic_listam" style="display:none;">			
+					<?php if ($this->log_list) { ?>
+						<?php foreach ($this->log_list as $key => $val) { ?>
+						<span><em class="i_right"><?php echo $val['add_time']; ?></em><a href="javascript:;" onclick="$.startQs({flgs:7,html:(decodeURIComponent('<?php echo rawurlencode('<div style="padding: 10px 0;">' . $val['add_time'] . ': ' .$val['title']) . '</div>'; ?>'))});"><?php echo $val['user_name']; ?></a></span>
+						<?php } ?>
+					<?php } ?>
+				</p>
+            </div>
+            <div class="interest_user" style="cursor:pointer;" onclick="$.startQs({flgs:2,number:0,share_type:'topic',target_id:<?php echo $this->topic_info['topic_id']; ?>});"><h3>分享/邀请好友完善</h3></div>
+            
+            <p class="t_share t_stpd i_gray">
+				<a href="javascript:;" class="w" title="分享到新浪微博等网站" onclick="$.startQs({flgs:2,number:0,share_type:'topic',target_id:<?php echo $this->topic_info['topic_id']; ?>});">站外</a>
+				<?php if ($this->user_id){ ?>
+					<a href="javascript:;" class="s" title="以站内私信的方式分享或邀请好友来完善此话题" onclick="$.startQs({flgs:2,number:1,share_type:'topic',target_id:<?php echo $this->topic_info['topic_id']; ?>});">私信</a>
+				<?php } ?>
+			
+				<a href="javascript:;" class="y" title="以邮件的形式分享或邀请好友来完善此话题" onclick="$.startQs({flgs:2,number:2,share_type:'topic',target_id:<?php echo $this->topic_info['topic_id']; ?>});">邮件</a>
+			</p>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var TOPIC_ID = '<?php echo $this->topic_info['topic_id']; ?>';
+	var TOPIC_TITLE = '<?php echo $this->topic_info['topic_title']; ?>';
+</script>
+
+<script type="text/javascript" src="<?php echo G_STATIC_URL; ?>/js/app/topic.js"></script>
+
+<?php TPL::output('global/footer.tpl.htm'); ?>

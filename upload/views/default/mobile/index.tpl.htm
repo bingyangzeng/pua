@@ -1,0 +1,76 @@
+<?php TPL::output('mobile/header.tpl.htm'); ?>
+
+<script type="text/javascript">	
+	$(document).ready(function () {
+		$('#contents_nav li').click(function () {
+			$('#contents_nav li').removeClass('click');
+			
+			$('div.tpage').hide();
+			$('div.tpage._contents' + $(this).attr('class')).show();
+			
+			if ($('div.tpage._contents' + $(this).attr('class')).find('ul').html() == '')
+			{
+				switch ($(this).attr('class'))
+				{
+					case '_focus':
+						mobile_more_load(G_BASE_URL + '/home/ajax/index_actions/type-all__uid-' +  G_USER_ID + '__template-mobile__filter-focus', $('#bp_focus_more'), $('#c_focus_list'));
+					break;
+				}
+			}
+			
+			$(this).addClass('click');
+		});
+		
+		mobile_more_load(G_BASE_URL + '/home/ajax/index_actions/type-all__template-mobile', $('#bp_all_more'), $('#c_all_list'));
+	});
+</script>
+
+<div class="home">
+  
+    <div class="h_title">
+    <div class="pic"></div>最新动态
+    </div>
+
+    <div class="con">
+    	<div class="tpage _contents_actions" style="display:block;">
+    		<ul id="c_all_list"></ul>
+            <div class="more" id="bp_all_more">更多</div>
+         </div>
+         
+         <div class="tpage _contents_focus">
+	         <ul id="c_focus_list"></ul>
+             <div class="more" id="bp_focus_more">更多</div>
+         </div>
+         
+       <!--  <div class="taste">
+	         <div class="title">可能感兴趣的人或话题</div>
+	         <ul>
+	         	<?php foreach($this->sidebar_recommend_users_topics AS $key => $val) { ?>
+		        <li>
+		        <?php if ((isset($val['topic_id'])) && ($val['topic_id'] > 0)) { ?>	
+			        <div><a href="mobile/topic/<?php echo rawurlencode($val['topic_title']); ?>"><img src="<?php echo get_topic_pic_url('mid', $val['topic_pic']); ?>" width="30" height="30" /></a></div>
+			        <div class="sub" onclick="focus_topic($(this), $(this), <?php echo $val['topic_id']; ?>);">关注</div>
+			        <div class="ti"><a href="mobile/topic/<?php echo rawurlencode($val['topic_title']); ?>"><span class="tag" style="margin:0px;"><?php echo cjk_substr($val['topic_title'], 0, 10, 'UTF-8', '...'); ?></span></a>
+			        <?php if ($val['focus_users']['user_name']) { ?>
+			        <br/><span class="time"><a href="mobile/people/<?php echo rawurlencode($val['focus_users']['user_name']);?>"><?php echo $val['focus_users']['user_name'];?></a> 也关注了该话题</span>
+			        <?php } ?>
+			        </div>
+			     <?php } else { ?>
+			        <div><a href="mobile/topic/<?php echo rawurlencode($val['topic_title']); ?>"><img src="<?php echo get_topic_pic_url('mid', $val['topic_pic']); ?>" width="30" height="30" /></a></div>
+			        <div class="sub" onclick="follow_people($(this), $(this), <?php echo $val['uid'];?>);">关注</div>
+			        <div class="ti"><a href="mobile/people/<?php echo $val['url_token']; ?>"><span class="name"><?php echo $val['user_name']; ?></span></a>
+			        <?php if ($val['rtype']['type'] == 'friend') { ?>
+			        	<br/><span class="time"><a href='mobile/people/<?php echo rawurlencode($val['friend_users']['user_name']);?>' onMouseOver="eventsMouseM(this);" rel="<?php echo $val['friend_users']['uid'];?>"><?php echo $val['friend_users']['user_name'];?></a> 关注了 TA</span>
+			        <?php } else if ($val['rtype']['type'] == 'topic') { ?>
+			        	<br/><span class="time">TA 也关注 &nbsp; <a href='mobile/topic/<?php echo rawurlencode($val['topic_info']['topic_title']);?>'><?php echo $val['topic_info']['topic_title'];?></a></span>
+			        <?php } ?>
+			        </div>
+			        <?php } ?>
+			    </li> 
+			    <?php } ?>                 
+			 </ul>
+			 </div>
+         </div>
+</div>-->
+
+<?php TPL::output('mobile/footer.tpl.htm'); ?>

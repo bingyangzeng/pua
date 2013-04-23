@@ -1,0 +1,73 @@
+<?php TPL::output('admin/global/header.tpl.htm'); ?>
+
+<!--left-->
+<?php TPL::output('admin/global/left.tpl.htm'); ?>
+<!--left-->
+
+<!-- main -->
+<div id="main-content">
+	<div class="clear"></div>
+	<div class="content-box">
+		<div class="content-box-content" style="margin:10px auto; width: 500px;">
+			<div class="tab-content default-tab" id="tab1" style="padding:10px; background:#F2F8FF;">
+				<fieldset>
+				<h4 id="tips_title">正在还原数据库，请稍候...</h4>
+				<div style="padding:2px; height: 15px; border: solid 1px #999;">
+					<div id="percent" style="margin:0;height:15px; width:0%;background-color:#000080;"></div>
+				</div>
+				<p style=" float:right;"> 完成了<span id="finish">0</span>%，执行<span id="query">0</span>句SQL。 </p>
+				</fieldset>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
+
+<!-- footer -->
+<?php TPL::output('admin/global/footer.tpl.htm'); ?>
+<!-- footer -->
+
+</div>
+<!-- main -->
+
+</div>
+<script>
+$(document).ready(function () {
+	window.setTimeout("db_import('" + G_BASE_URL + "/admin/db_import/import_process/filename-<?php echo $this->filename; ?>')", 500);
+});
+
+function db_import(url)
+{
+	$.get(url, function (result){
+		if(result.errno == 1)
+		{
+			var param = result.rsm;
+		
+			$("#finish").html(result.rsm.percent);
+			$("#query").html(result.rsm.totalqueries);
+			$("#percent").css('width', result.rsm.percent + '%');
+			//$("#mb_sum").html(result.rsm.mb_sum);
+						
+			window.setTimeout("db_import(get_url('" + param.filename + "', " + param.page + ", " + param.start + ", " + param.foffset + ", " + param.totalqueries + ", " + param.mb_sum + "))", 500);
+		}
+		else if(result.errno == 2)
+		{
+			$("#tips_title").html('数据库还原成功');
+		}
+		else
+		{
+			alert(result.err);
+			return;
+		} 
+	},'json').error(function (error) { if ($.trim(error.responseText) != '') { alert('发生错误, 返回的信息: ' + error.responseText); } });
+}
+
+function get_url(filename, page, start, foffset, totalqueries, mb_sum)
+{
+	return G_BASE_URL + '/admin/db_import/import_process/filename-' + filename + '__page-' + page + '__foffset-' + foffset + '__totalqueries-' + totalqueries + '__mb_sum-' + mb_sum;
+}
+
+</script>
+
+</body>
+</html>

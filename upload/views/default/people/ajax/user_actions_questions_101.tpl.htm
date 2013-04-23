@@ -1,0 +1,9 @@
+<?php if (is_array($this->list)) { ?>
+<?php foreach ($this->list AS $key => $val) { ?>	
+	<div class="q_mainElem i_prl">
+		<h4><a href="question/<?php echo $val['question_id']; ?>"><?php echo $val['question_content']; ?></a></h4>
+		<p class="q_elems"><?php echo $val['view_count']; ?> 次浏览 &nbsp;&nbsp; • <?php echo $val['focus_count']; ?> 个关注 &nbsp;&nbsp;• <?php echo date_friendly($val['add_time']); ?></p>
+		 <span class="q_reply i_pas"><em title="该问题已有 <?php echo $val['answer_count']; ?> 个回复"><?php echo $val['answer_count']; ?></em> 回复</span>
+   </div>
+<?php } ?>
+<?php } ?>
